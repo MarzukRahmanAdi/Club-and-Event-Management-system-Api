@@ -190,5 +190,9 @@ class clubController extends Controller
         return $member;
 
     }
+    
+    public function filterClubs(Request $request){
+        
+    }
 
 }

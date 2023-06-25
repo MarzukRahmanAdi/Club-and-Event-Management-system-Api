@@ -33,7 +33,7 @@ Route::prefix('auth')->group(function () {
 Route::prefix("club")->group(function () {
 	Route::post("/update/{id}", [clubController::class, 'updateClub' ])->middleware('auth:sanctum');
 	Route::post("/get/{id}", [clubController::class, 'getClub' ]);
-	Route::post("get", [clubController::class, 'getAllClubs' ]);
+	Route::get("get", [clubController::class, 'getAllClubs' ]);
 
 });
 
@@ -43,17 +43,15 @@ Route::prefix("event")->group(function () {
 	Route::post("/update/{id}", [clubController::class, 'updateEvent' ])->middleware('auth:sanctum');
 
 	Route::post("/get/{id}", [clubController::class, 'getEvents' ]);
-	Route::post("get", [clubController::class, 'getAllEvents' ]);
+	Route::get("get", [clubController::class, 'getAllEvents' ]);
 	Route::delete("/delete/{id}", [clubController::class, 'deleteEvent' ])->middleware('auth:sanctum');
-
-
 });
 
 
 Route::prefix("member")->group(function () {
 	Route::post("/add/{id}", [clubController::class, 'addMember' ])->middleware('auth:sanctum');
 	Route::post("/get/{id}", [clubController::class, 'getMembers' ]);
-	Route::post("get", [clubController::class, 'getAllMembers' ]);
+	Route::get("get", [clubController::class, 'getAllMembers' ]);
 	Route::post("/change/{id}", [clubController::class, 'changeMemberOrder' ])->middleware('auth:sanctum');
 	Route::post("/update/{id}", [clubController::class, 'updateMember' ])->middleware('auth:sanctum');
 
