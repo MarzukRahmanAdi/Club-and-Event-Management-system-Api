@@ -29,7 +29,6 @@ class AuthController extends Controller
 		if(User::create($validatedData)) {
 			return response()->json([
 				"email" => $request->email,
-				
 				"name" => $request->name,
 			], 201);
 		}

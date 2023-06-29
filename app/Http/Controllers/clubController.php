@@ -9,26 +9,41 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
 
 class clubController extends Controller
 {
     public function updateClub(Request $request, string $id)
     {
-
         $user = User::find($id);
         $authUser = $request->user();
         if ($authUser->id !== $user->id) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
+        \Log::info($request);
 
-        $userData = $request->all();
-
-        unset($userData['_token']);
-
-        
+        $userData = $request->except('_token');
+    
+        // Handle logo image upload
+        if ($request->hasFile('logo')) {
+            $logoFile = $request->file('logo');
+            $logoPath = $logoFile->store('logos', 'public'); 
+            $userData['logo_link'] = Storage::disk('public')->url($logoPath);
+        }
+    
+        // Handle cover image upload
+        if ($request->hasFile('cover')) {
+            $coverFile = $request->file('cover');
+            $coverPath = $coverFile->store('covers', 'public'); 
+            $userData['cover_link'] = Storage::disk('public')->url($coverPath);
+        }
+    
         $user->update($userData);
         return $user;
     }
+
+
     public function getClub(string $id, Request $request)
     {
         $user = User::find($id);
@@ -50,16 +65,26 @@ class clubController extends Controller
         if ($authUser->id !== $user->id) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-
-
+    
         $event = new Event();
         $event->location = $request->input('location');
         $event->name = $request->input('name');
-        $event->Image_links = json_encode($request->input('Image_links'));
         $event->date = Carbon::parse($request->input('date'))->toDateString();
-
+    
+        // Handle image uploads
+        $imageLinks = [];
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+    
+            foreach ($images as $image) {
+                $path = $image->store('events', 'public'); // to store
+                $imageLinks[] = Storage::disk('public')->url($path); // to get the link
+            }
+        }
+    
+        $event->Image_links = json_encode($imageLinks);
         $user->events()->save($event);
-
+    
         return response()->json(['message' => 'Event added successfully']);
     }
 
