@@ -60,33 +60,37 @@ class clubController extends Controller
 
     public function addEvent(Request $request, $id)
     {  
-        $user = User::findOrFail($id);
-        $authUser = $request->user();
-        if ($authUser->id !== $user->id) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
-    
-        $event = new Event();
-        $event->location = $request->input('location');
-        $event->name = $request->input('name');
-        $event->date = Carbon::parse($request->input('date'))->toDateString();
-    
-        // Handle image uploads
-        $imageLinks = [];
-        if ($request->hasFile('images')) {
-            $images = $request->file('images');
-    
-            foreach ($images as $image) {
-                $path = $image->store('events', 'public'); // to store
-                $imageLinks[] = Storage::disk('public')->url($path); // to get the link
+        try {
+            $user = User::findOrFail($id);
+            $authUser = $request->user();
+            if ($authUser->id !== $user->id) {
+                return response()->json(['message' => 'Unauthorized'], 401);
             }
+        
+            $event = new Event();
+            $event->location = $request->input('location');
+            $event->name = $request->input('name');
+            $event->date = Carbon::parse($request->input('date'))->toDateString();
+        
+            // Handle image uploads
+            $imageLinks = [];
+            foreach ($request->allFiles() as $key => $file) {
+                if ($file->isValid()) {
+                    $path = $file->store('events', 'public');
+                    $imageLinks[] = Storage::disk('public')->url($path);
+                }
+            }        
+        
+            $event->Image_links = json_encode($imageLinks);
+            $user->events()->save($event);
+        
+            return response()->json(['message' => 'Event added successfully']);
+       
+        } catch (\Throwable $th) {
+             return response()->json(['message' => $th]);
+
         }
-    
-        $event->Image_links = json_encode($imageLinks);
-        $user->events()->save($event);
-    
-        return response()->json(['message' => 'Event added successfully']);
-    }
+ }
 
     public function getEvents($userId)
     {

@@ -49,7 +49,7 @@ Route::prefix("event")->group(function () {
 
 
 Route::prefix("member")->group(function () {
-	Route::post("/add/{id}", [clubController::class, 'addMember' ])->middleware('auth:sanctum');
+	Route::post("/add/{id}", [clubController::class, 'addMember' ]);
 	Route::get("/get/{id}", [clubController::class, 'getMembers' ]);
 	Route::get("get", [clubController::class, 'getAllMembers' ]);
 	Route::post("/change/{id}", [clubController::class, 'changeMemberOrder' ])->middleware('auth:sanctum');
