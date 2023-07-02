@@ -54,5 +54,6 @@ Route::prefix("member")->group(function () {
 	Route::get("get", [clubController::class, 'getAllMembers' ]);
 	Route::post("/change/{id}", [clubController::class, 'changeMemberOrder' ])->middleware('auth:sanctum');
 	Route::post("/update/{id}", [clubController::class, 'updateMember' ])->middleware('auth:sanctum');
+	Route::delete("/delete/{id}", [clubController::class, 'deleteMember' ])->middleware('auth:sanctum');
 
 });

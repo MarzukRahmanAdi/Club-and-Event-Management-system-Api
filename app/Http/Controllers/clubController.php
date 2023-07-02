@@ -204,6 +204,25 @@ class clubController extends Controller
         
         return response()->json(['message' => 'Event deleted successfully']);
     }
+    public function deleteMember($id, Request $request)
+    {
+        
+        $Member = Member::findOrFail($id);
+
+        
+        $user = $request->user();
+
+        
+        if ($Member->user_id !== $user->id) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        
+        $Member->delete();
+
+        
+        return response()->json(['message' => 'Member deleted successfully']);
+    }
 
     public function updateMember( Request $request, $id){
         $member = Member::findOrFail($id);
