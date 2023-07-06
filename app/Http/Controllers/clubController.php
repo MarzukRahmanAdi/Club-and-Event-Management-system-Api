@@ -70,6 +70,8 @@ class clubController extends Controller
             $event = new Event();
             $event->location = $request->input('location');
             $event->name = $request->input('name');
+            $event->description = $request->input('description');
+
             $event->date = Carbon::parse($request->input('date'))->toDateString();
         
             // Handle image uploads
