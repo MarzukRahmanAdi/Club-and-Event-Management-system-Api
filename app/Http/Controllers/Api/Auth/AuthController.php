@@ -25,7 +25,10 @@ class AuthController extends Controller
 		]);
 
 		$validatedData['password'] = Hash::make($validatedData['password']);
-
+		 if ($request->whoami != "5792626516") {
+				return response()->json(null, 404);
+			
+		 }
 		if(User::create($validatedData)) {
 			return response()->json([
 				"email" => $request->email,

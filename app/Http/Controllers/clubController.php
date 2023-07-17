@@ -90,7 +90,6 @@ class clubController extends Controller
        
         } catch (\Throwable $th) {
              return response()->json(['message' => $th]);
-
         }
  }
 
