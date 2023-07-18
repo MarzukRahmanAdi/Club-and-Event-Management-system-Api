@@ -123,7 +123,7 @@ class clubController extends Controller
             }
     
             $member = new Member();
-            $member->fill($request->all());
+            $member->fill($request->json()->all());
             $user->members()->save($member);
 
             return response()->json(['message' => 'Member added successfully']);
