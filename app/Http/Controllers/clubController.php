@@ -122,7 +122,7 @@ class clubController extends Controller
 
             return response()->json(['message' => 'Member added successfully']);
         } catch (\Throwable $th) {
-            return response()->json(['message' => $th]);
+            return response()->json(['message' => $th], 404);
         }
     }
 
