@@ -110,6 +110,11 @@ class clubController extends Controller
     public function addMember(Request $request, $id)
     {
         try {
+            $request->validate([
+                'name' => 'required', 
+                
+            ]);
+        
             $user = User::findOrFail($id);
             $authUser = $request->user();
             if ($authUser->id !== $user->id) {
